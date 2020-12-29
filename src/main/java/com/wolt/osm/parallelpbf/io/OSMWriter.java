@@ -127,8 +127,7 @@ public final class OSMWriter implements Runnable {
                     wayEncoder.add((Way) entity);
                 } else if (entity instanceof Relation) {
                     relationEncoder.add((Relation) entity);
-                } else {
-                    }
+                }
 
                 int nodesSize = nodesEncoder.estimateSize();
                 int waysSize = wayEncoder.estimateSize();
