@@ -27,6 +27,9 @@ import com.wolt.osm.parallelpbf.entity.Node;
 import com.wolt.osm.parallelpbf.entity.Way;
 import com.wolt.osm.parallelpbf.entity.Header;
 import com.wolt.osm.parallelpbf.entity.BoundBox;
+import lombok.NonNull;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import lombok.var;
 
@@ -116,6 +119,11 @@ public final class ParallelBinaryParser {
      * Blob reade helper, wrapping incoming stream with OSM PBF data.
      */
     private final BlobReader reader;
+
+    @Setter
+    @NonNull
+    @Accessors(chain = true)
+    private ThreadFactory threadFactory = Executors.defaultThreadFactory();
 
     /**
      * Executor shared between class methods.
@@ -346,7 +354,7 @@ public final class ParallelBinaryParser {
             throw new IllegalStateException("Previous parse call is still in progress");
         }
 
-        executor = Executors.newFixedThreadPool(threads);
+        executor = Executors.newFixedThreadPool(threads, threadFactory);
         currentDataBlock = 0;
         headerSeen = false;
 
