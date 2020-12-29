@@ -87,7 +87,6 @@ public class ParallelBinaryWriter implements Closeable {
         try {
             writeQueue.put(entity);
         } catch (InterruptedException e) {
-            log.warn("Unable to send entity for writing: {}", e.getMessage(), e);
             return false;
         }
         return true;
@@ -103,8 +102,7 @@ public class ParallelBinaryWriter implements Closeable {
             try {
                 worker.join();
             } catch (InterruptedException e) {
-                log.warn("Interrupted while waiting for OSMWriter to stop");
-            }
+                }
         });
     }
 }

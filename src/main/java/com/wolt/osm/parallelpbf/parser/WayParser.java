@@ -48,7 +48,6 @@ public final class WayParser extends BaseParser<Osmformat.Way, Consumer<Way>> {
             nodeId += node;
             way.getNodes().add(nodeId);
         }
-        log.debug(way.toString());
         getCallback().accept(way);
     }
 }

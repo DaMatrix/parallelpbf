@@ -97,7 +97,6 @@ public class OSMDataReader extends OSMReader {
         try {
             primitives = Osmformat.PrimitiveBlock.parseFrom(message);
         } catch (InvalidProtocolBufferException e) {
-            log.error("Error parsing OSMData block: {}", e.getMessage(), e);
             throw new RuntimeException(e);
         }
         var stringTable = primitives.getStringtable();
@@ -126,7 +125,6 @@ public class OSMDataReader extends OSMReader {
             if (changesetsCb != null) {
                 group.getChangesetsList().forEach(changeMessage -> {
                     long id = changeMessage.getId();
-                    log.debug("ChangeSet id: {}", id);
                     changesetsCb.accept(id);
                 });
             }

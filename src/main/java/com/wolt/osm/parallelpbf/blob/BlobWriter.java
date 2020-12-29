@@ -54,7 +54,6 @@ public class BlobWriter {
                 output.write(headerBlob);
                 output.write(blob);
             } catch (IOException e) {
-                log.error("Error while writing data blob: {}", e.getMessage(), e);
                 return false;
             }
         }

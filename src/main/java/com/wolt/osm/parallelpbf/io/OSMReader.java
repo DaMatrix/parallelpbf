@@ -80,7 +80,6 @@ public abstract class OSMReader implements Runnable {
             }
             this.read(payload);
         } catch (InvalidProtocolBufferException | DataFormatException e) {
-            log.error("Error parsing Blob: {}", e.getMessage(), e);
             throw new RuntimeException(e);
         } finally {
             tasksLimiter.release();
@@ -101,7 +100,6 @@ public abstract class OSMReader implements Runnable {
         payload = new byte[blobData.getRawSize()];
         int uncompressedSize = decompresser.inflate(payload);
         if (uncompressedSize != blobData.getRawSize()) {
-            log.error("Expected {} bytes after decompression, but got {}", blobData.getRawSize(), uncompressedSize);
             throw new RuntimeException("Invalid blob payload size");
         }
         return payload;

@@ -128,8 +128,7 @@ public final class OSMWriter implements Runnable {
                 } else if (entity instanceof Relation) {
                     relationEncoder.add((Relation) entity);
                 } else {
-                    log.error("Unknown entity type: {}", entity);
-                }
+                    }
 
                 int nodesSize = nodesEncoder.estimateSize();
                 int waysSize = wayEncoder.estimateSize();
@@ -140,7 +139,6 @@ public final class OSMWriter implements Runnable {
                 }
             } catch (InterruptedException e) {
                 flush(nodesEncoder.estimateSize(), wayEncoder.estimateSize(), relationEncoder.estimateSize());
-                log.debug("OSMWriter requested to stop");
                 return;
             }
         }

@@ -81,7 +81,6 @@ public final class OSMHeaderReader extends OSMReader {
                 .filter(f -> !f.equalsIgnoreCase(Header.FEATURE_DENSE_NODES))
                 .filter(f -> !f.equalsIgnoreCase(Header.FEATURE_HISTORICAL_INFORMATION))
                 .findAny();
-        unsupported.ifPresent(s -> log.error("Unsupported required feature found: {}", s));
         return !unsupported.isPresent();
     }
 
@@ -99,7 +98,6 @@ public final class OSMHeaderReader extends OSMReader {
         try {
             headerData = Osmformat.HeaderBlock.parseFrom(message);
         } catch (InvalidProtocolBufferException e) {
-            log.error("Error parsing OSMHeader block: {}", e.getMessage(), e);
             throw new RuntimeException(e);
         }
 
@@ -115,7 +113,6 @@ public final class OSMHeaderReader extends OSMReader {
             if (headerData.hasSource()) {
                 header.setSource(headerData.getSource());
             }
-            log.debug("Header: {}", header.toString());
             headerCb.accept(header);
         }
 
@@ -124,7 +121,6 @@ public final class OSMHeaderReader extends OSMReader {
                     headerData.getBbox().getTop() / NANO,
                     headerData.getBbox().getRight() / NANO,
                     headerData.getBbox().getBottom() / NANO);
-            log.debug("Bounding box: {}", bbox.toString());
             boundBoxCb.accept(bbox);
         }
     }

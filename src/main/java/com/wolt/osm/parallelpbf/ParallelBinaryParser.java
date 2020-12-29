@@ -151,7 +151,6 @@ public final class ParallelBinaryParser {
         switch (information.getType()) {
             case BlobInformation.TYPE_OSM_DATA:
                 if (!headerSeen) {
-                    log.error("Got OSMData before OSMHeader");
                     return Optional.empty();
                 }
                 return Optional.of(new OSMDataReader(blob, tasksLimiter, nodesCb, waysCb, relationsCb, changesetsCb));
@@ -174,14 +173,12 @@ public final class ParallelBinaryParser {
         try {
             tasksLimiter.acquire();
         } catch (InterruptedException e) {
-            log.error("Failed to acquire processing slot: {}", e.getMessage(), e);
             return Optional.empty();
         }
         try {
             return Optional.of(executor.submit(osmReader));
         } catch (RejectedExecutionException e) {
             tasksLimiter.release();
-            log.error("Failed to start processing of blob: {}", e.getMessage(), e);
             return Optional.empty();
         }
     }
@@ -199,7 +196,6 @@ public final class ParallelBinaryParser {
         if (nodesCb != null || waysCb != null || relationsCb != null || changesetsCb != null || !headerSeen) {
 
             int currentShard = currentDataBlock % partitions;
-            log.trace("Current shard: {}, current block: {}, my shard: {}", currentShard, currentDataBlock, shard);
             ++currentDataBlock;
             if (currentShard == shard || information.getType().equals("OSMHeader")) {
                 return reader.readBlob(information.getSize())
@@ -371,7 +367,6 @@ public final class ParallelBinaryParser {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } catch (ExecutionException e) {
-            log.error("Parsing failed with: {}", e.getMessage(), e);
             return;
         } finally {
             //In case of exception we would like to kill all the tasks immediately

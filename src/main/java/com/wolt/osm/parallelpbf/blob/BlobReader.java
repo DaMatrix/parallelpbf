@@ -67,7 +67,6 @@ public final class BlobReader {
                 return Optional.empty();
             }
         } catch (IOException e) {
-            log.error("Error reading from the stream: {}", e.getMessage(), e);
             return Optional.empty();
         }
         return Optional.of(buffer);
@@ -86,12 +85,10 @@ public final class BlobReader {
         Optional<Integer> result = blobHeaderLengthBuffer.map(value -> {
             ByteBuffer blobHeaderLengthWrapped = ByteBuffer.wrap(value);
             int blobHeaderLength = blobHeaderLengthWrapped.getInt();
-            log.trace("Read BlobHeaderLength: {}", blobHeaderLength);
             return blobHeaderLength;
         });
         return result.flatMap(value -> {
             if (value > MAX_HEADER_SIZE) {
-                log.warn("BlobHeader size is too big: {}", value);
                 return Optional.empty();
             } else {
                 return result;
@@ -114,16 +111,13 @@ public final class BlobReader {
             Fileformat.BlobHeader header;
             try {
                 header = Fileformat.BlobHeader.parseFrom(blobHeaderBuffer.get());
-                log.trace("Got BlobHeader with type: {}, data size: {}", header.getType(), header.getDatasize());
                 return Optional.of(new BlobInformation(header.getDatasize(), header.getType()));
             } catch (InvalidProtocolBufferException e) {
-                log.error("Failed to parse BlobHeader: {}", e.getMessage(), e);
                 return Optional.empty();
             }
         });
         return result.flatMap(value -> {
             if (value.getSize() > MAX_BLOB_SIZE) {
-                log.warn("Blob size is too big: {}", value);
                 return Optional.empty();
             } else {
                 return result;
@@ -156,7 +150,6 @@ public final class BlobReader {
             }
             return Optional.of(offset);
         } catch (IOException e) {
-            log.error("Error fast forwarding the stream: {}", e.getMessage(), e);
             return Optional.empty();
         }
     }
