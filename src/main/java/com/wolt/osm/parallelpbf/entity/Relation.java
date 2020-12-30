@@ -21,6 +21,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -47,5 +48,5 @@ public final class Relation extends OsmEntity {
     /**
      * Ordered list of relation members. Can be empty.
      */
-    private final List<RelationMember> members = new LinkedList<>();
+    private final List<RelationMember> members = new ArrayList<>();
 }

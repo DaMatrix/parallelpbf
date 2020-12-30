@@ -34,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.var;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -137,7 +138,7 @@ public final class ParallelBinaryParser {
      * Where there will be no tasks left to submit, every remaining task will be awaited to complete.
      * After that executor (see above) will be destroyed and onComplete callback will be called.
      */
-    private List<Future<?>> tasksInFlight = new LinkedList<>();
+    private List<Future<?>> tasksInFlight = new ArrayList<>();
 
     /**
      * Data block counter for partitioning, starts with zero, so first data block (which is OsmHeader block)
@@ -364,7 +365,7 @@ public final class ParallelBinaryParser {
             blob.ifPresent(tasksInFlight::add);
 
             //We should remove completed tasks from time to time to not to increase our memory consumption
-            tasksInFlight = tasksInFlight.stream().filter(f -> !f.isDone()).collect(Collectors.toList());
+            tasksInFlight.removeIf(Future::isDone);
         } while (blob.isPresent());
 
         //Wait for tasks completion

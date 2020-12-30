@@ -21,6 +21,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -48,5 +49,5 @@ public final class Way extends OsmEntity {
      *
      * @see Node
      */
-    private final List<Long> nodes = new LinkedList<>();
+    private final List<Long> nodes = new ArrayList<>();
 }
