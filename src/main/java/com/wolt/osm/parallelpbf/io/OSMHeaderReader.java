@@ -113,6 +113,15 @@ public final class OSMHeaderReader extends OSMReader {
             if (headerData.hasSource()) {
                 header.setSource(headerData.getSource());
             }
+            if (headerData.hasOsmosisReplicationTimestamp()) {
+                header.setReplicationTimestamp(headerData.getOsmosisReplicationTimestamp());
+            }
+            if (headerData.hasOsmosisReplicationSequenceNumber()) {
+                header.setReplicationSequenceNumber(headerData.getOsmosisReplicationSequenceNumber());
+            }
+            if (headerData.hasOsmosisReplicationBaseUrl()) {
+                header.setReplicationBaseUrl(headerData.getOsmosisReplicationBaseUrl());
+            }
             headerCb.accept(header);
         }
 

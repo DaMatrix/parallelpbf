@@ -68,4 +68,8 @@ public class Header {
      * Optional source information. May be null.
      */
     private String source;
+
+    private Long replicationTimestamp;
+    private Long replicationSequenceNumber;
+    private String replicationBaseUrl;
 }
