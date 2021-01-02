@@ -35,6 +35,8 @@ import java.util.zip.Inflater;
  */
 @Slf4j
 public abstract class OSMReader implements Runnable {
+    private static final ThreadLocal<Inflater> INFLATER_CACHE = ThreadLocal.withInitial(Inflater::new);
+
     /**
      * Incoming blob to process.
      */
@@ -95,7 +97,8 @@ public abstract class OSMReader implements Runnable {
      */
     private byte[] decompress(final Fileformat.Blob blobData) throws DataFormatException {
         byte[] payload;
-        Inflater decompresser = new Inflater();
+        Inflater decompresser = INFLATER_CACHE.get();
+        decompresser.reset();
         decompresser.setInput(blobData.getZlibData().toByteArray());
         payload = new byte[blobData.getRawSize()];
         int uncompressedSize = decompresser.inflate(payload);
