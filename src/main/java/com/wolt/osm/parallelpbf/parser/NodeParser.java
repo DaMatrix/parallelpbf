@@ -32,10 +32,9 @@ import java.util.function.Consumer;
  */
 @Slf4j
 public final class NodeParser extends BaseParser<Osmformat.Node, Consumer<Node>> {
-    /**
-     * Nano degrees scale.
-     */
-    private static final double NANO = .000000001;
+    private static final long LONLAT_RESOLUTION = 1000 * 1000 * 1000;
+
+    private static final long RESOLUTION_CONVERT = LONLAT_RESOLUTION / Node.COORDINATE_PRECISION;
 
     /**
      * Granularity, units of nanodegrees, used to store coordinates.
@@ -83,8 +82,8 @@ public final class NodeParser extends BaseParser<Osmformat.Node, Consumer<Node>>
 
     @Override
     public void parse(final Osmformat.Node message) {
-        double latitude = NANO * (latOffset + (granularity * message.getLat()));
-        double longitude = NANO * (lonOffset + (granularity * message.getLon()));
+        int latitude = (int) ((granularity * message.getLat() + latOffset) / RESOLUTION_CONVERT);
+        int longitude = (int) ((granularity * message.getLon() + lonOffset) / RESOLUTION_CONVERT);
         Node node = new Node(message.getId(), latitude, longitude);
         node.setTags(parseTags(message.getKeysList(), message.getValsList()));
         node.setInfo(parseInfo(message));
@@ -98,8 +97,8 @@ public final class NodeParser extends BaseParser<Osmformat.Node, Consumer<Node>>
     public void parse(final Osmformat.DenseNodes nodes) {
         int tagsKeyValuePointer = 0;
         long id = 0;
-        double latitude = 0;
-        double longitude = 0;
+        long latitude = 0;
+        long longitude = 0;
 
         long timestamp = 0;
         long changeset = 0;
@@ -107,10 +106,10 @@ public final class NodeParser extends BaseParser<Osmformat.Node, Consumer<Node>>
         int usernameStringId = 0;
         for (int indx = 0; indx < nodes.getIdCount(); indx++) {
             id += nodes.getId(indx);
-            latitude += NANO * (latOffset + (granularity * nodes.getLat(indx)));
-            longitude += NANO * (lonOffset + (granularity * nodes.getLon(indx)));
+            latitude += (latOffset + (granularity * nodes.getLat(indx)));
+            longitude += (lonOffset + (granularity * nodes.getLon(indx)));
 
-            Node node = new Node(id, latitude, longitude);
+            Node node = new Node(id, (int) (latitude / RESOLUTION_CONVERT), (int) (longitude / RESOLUTION_CONVERT));
             if (nodes.getKeysValsCount() > 0) {
                 while (true) {
                     int keyIndex = nodes.getKeysVals(tagsKeyValuePointer);

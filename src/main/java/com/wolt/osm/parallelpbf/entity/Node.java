@@ -30,13 +30,15 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public final class Node extends OsmEntity {
+    public static final int COORDINATE_PRECISION = 10000000;
+
     /**
      * Constructs Node setting mandatory fields.
      * @param id Required node id.
      * @param latitude Node latitude.
      * @param longitude Node longitude
      */
-    public Node(final long id, final double latitude, final double longitude) {
+    public Node(final long id, final int latitude, final int longitude) {
         super(id);
         this.lat = latitude;
         this.lon = longitude;
@@ -45,10 +47,10 @@ public final class Node extends OsmEntity {
     /**
      * Node latitude.
      */
-    private final double lat;
+    private final int lat;
 
     /**
      * Node longitude.
      */
-    private final double lon;
+    private final int lon;
 }
